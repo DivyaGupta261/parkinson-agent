@@ -1,0 +1,34 @@
+[project]
+name = "pd-agent"
+version = "0.1.0"
+description = "A research agent that reads Parkinson's literature and explains it with citations"
+authors = [
+    { name = "Divya Gupta", email = "divya261261@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "anthropic>=2.10.0",
+    "fastapi>=0.165.0",
+    "httpx>=0.28.1",
+    "python-dotenv>=1.2.4",
+    "rich>=15.0.0",
+    "typer>=0.29.2",
+    "uvicorn>=0.54.0",
+]
+
+[project.scripts]
+pd = "pd_agent.cli:app"
+
+[build-system]
+requires = ["uv_build>=0.10.4,<0.11.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "markdown>=3.11.3",
+    "pytest>=9.2.0",
+    "respx>=0.23.1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

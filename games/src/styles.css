@@ -1,0 +1,965 @@
+/* ------------------------------------------------------------------
+   Design tokens. Every colour is a CSS variable, so light/dark themes,
+   the print view and the user's theme choice only swap values here.
+   ------------------------------------------------------------------ */
+:root {
+  color-scheme: light;
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --surface-2: #eceef1;
+  --text: #111418;
+  --muted: #444b57;
+  --border: #7b828d;
+  --accent: #1d4ed8;
+  --accent-text: #ffffff;
+  --focus: #b3410e;
+  --danger: #b91c1c;
+  --danger-text: #ffffff;
+  --good: #146c43;
+  --warn: #9a3f0a;
+
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+
+  --state-on: #1f8f5f;
+  --state-off: #d9531e;
+  --state-off-2: #f6c3ab;
+  --state-dysk: #6250d6;
+  --state-dot: #ffffff;
+  --state-asleep: #8a8f98;
+  --state-asleep-2: #d3d6db;
+
+  --radius: 14px;
+  --tap: 64px; /* minimum hit area for anything you press */
+  font-size: 112.5%; /* 18px base */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121417;
+    --surface: #1b1e23;
+    --surface-2: #272b32;
+    --text: #f2f3f5;
+    --muted: #bcc3cd;
+    --border: #7d8592;
+    --accent: #8ab4ff;
+    --accent-text: #0b1020;
+    --focus: #ffb86b;
+    --danger: #ff8f8f;
+    --danger-text: #1a0606;
+    --good: #5fd39a;
+    --warn: #ffb27a;
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --state-on: #2bb07a;
+    --state-off: #e36a37;
+    --state-off-2: #6b2f17;
+    --state-dysk: #9085e9;
+    --state-dot: #1b1e23;
+    --state-asleep: #6b7079;
+    --state-asleep-2: #3a3e45;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121417;
+  --surface: #1b1e23;
+  --surface-2: #272b32;
+  --text: #f2f3f5;
+  --muted: #bcc3cd;
+  --border: #7d8592;
+  --accent: #8ab4ff;
+  --accent-text: #0b1020;
+  --focus: #ffb86b;
+  --danger: #ff8f8f;
+  --danger-text: #1a0606;
+  --good: #5fd39a;
+  --warn: #ffb27a;
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --state-on: #2bb07a;
+  --state-off: #e36a37;
+  --state-off-2: #6b2f17;
+  --state-dysk: #9085e9;
+  --state-dot: #1b1e23;
+  --state-asleep: #6b7079;
+  --state-asleep-2: #3a3e45;
+}
+
+:root[data-large-text="true"] {
+  font-size: 137.5%; /* 22px base; every size below is in rem, so it all scales */
+}
+
+/* Reduced motion: from the OS setting or the in-app toggle (App.tsx sets data-motion). */
+:root[data-motion="reduce"] *,
+:root[data-motion="reduce"] *::before,
+:root[data-motion="reduce"] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+
+/* ------------------------------------------------------------------
+   Base
+   ------------------------------------------------------------------ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+
+main,
+.top-bar,
+.site-footer,
+.settings-panel {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+main:focus {
+  outline: none;
+}
+
+h1 {
+  font-size: 1.9rem;
+  line-height: 1.2;
+  margin: 1rem 0 0.75rem;
+}
+h1:focus {
+  outline: none;
+}
+h1:focus-visible {
+  outline: 4px solid var(--focus);
+  outline-offset: 4px;
+}
+h2 {
+  font-size: 1.35rem;
+  margin: 0 0 0.5rem;
+}
+h3 {
+  font-size: 1.1rem;
+  margin: 0.75rem 0 0.25rem;
+}
+p {
+  margin: 0 0 0.75rem;
+}
+
+a {
+  color: var(--accent);
+}
+
+:focus-visible {
+  outline: 4px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: -100px;
+  z-index: 10;
+  padding: 0.75rem 1rem;
+  background: var(--surface);
+  color: var(--text);
+  border: 2px solid var(--text);
+  border-radius: var(--radius);
+}
+.skip-link:focus {
+  top: 8px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.print-only {
+  display: none;
+}
+
+/* ------------------------------------------------------------------
+   Buttons: big, high contrast, no hover-only cues
+   ------------------------------------------------------------------ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: var(--tap);
+  min-width: var(--tap);
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius);
+  border: 2px solid transparent;
+  font: inherit;
+  font-weight: 650;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  /* No double-tap-to-zoom delay, no text selection on long press. */
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-primary {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+.btn-secondary {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+.btn-danger {
+  background: var(--danger);
+  color: var(--danger-text);
+  margin-top: 0.75rem;
+}
+.btn-plain {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.btn-small {
+  padding-inline: 0.9rem;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0.75rem 0;
+}
+
+/* ------------------------------------------------------------------
+   Layout pieces
+   ------------------------------------------------------------------ */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-top: 12px;
+  padding-bottom: 4px;
+}
+.brand {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.settings-panel {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.site-footer {
+  margin-top: 2rem;
+  padding-bottom: 2rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.page > section {
+  margin-top: 1.5rem;
+}
+.card {
+  background: var(--surface);
+  border: 2px solid var(--surface-2);
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin: 1rem 0;
+}
+.stack > * + * {
+  margin-top: 0.75rem;
+}
+.stack > p {
+  margin-bottom: 0;
+}
+
+.disclaimer {
+  border-left: 6px solid var(--accent);
+  background: var(--surface);
+  padding: 0.75rem 1rem;
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.app-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+  display: grid;
+  gap: 1rem;
+}
+@media (min-width: 720px) {
+  .app-list {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.app-card {
+  display: grid;
+  gap: 0.35rem;
+  min-height: 7rem;
+  padding: 1.1rem;
+  border-radius: var(--radius);
+  border: 2px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  touch-action: manipulation;
+}
+.app-card:hover {
+  border-color: var(--accent);
+}
+.app-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+/* Form controls: the whole row is the hit area, not just the tiny box */
+.toggle-row,
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: var(--tap);
+  padding: 0.5rem 0.9rem;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.toggle-row input,
+.choice input {
+  width: 1.6rem;
+  height: 1.6rem;
+  flex: none;
+  accent-color: var(--accent);
+  margin: 0;
+}
+.choice:has(input:checked),
+.toggle-row:has(input:checked) {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 2px var(--accent);
+  font-weight: 650;
+}
+.choice:has(input:focus-visible),
+.toggle-row:has(input:focus-visible) {
+  outline: 4px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.choice-group {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.choice-group legend {
+  font-weight: 650;
+  margin-bottom: 0.4rem;
+  padding: 0;
+}
+.state-choices {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 560px) {
+  .state-choices {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+  font-weight: 600;
+}
+.field input,
+.field select,
+.field textarea {
+  font: inherit;
+  font-weight: 400;
+  min-height: var(--tap);
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  width: 100%;
+}
+.field-row {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+}
+
+.alert {
+  border-left: 6px solid var(--warn);
+  padding: 0.6rem 0.9rem;
+  background: var(--surface-2);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.status-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  font-size: 1.05rem;
+  margin: 0.5rem 0 1rem;
+}
+.prompt {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+.countdown {
+  font-size: 2.2rem;
+  font-weight: 700;
+  text-align: center;
+  margin: 1.5rem 0;
+}
+.status-message:empty {
+  display: none;
+}
+.result-message {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 0.75rem;
+  margin: 0;
+}
+.stats div {
+  background: var(--surface-2);
+  border-radius: var(--radius);
+  padding: 0.6rem 0.8rem;
+}
+.stats dt {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.stats dd {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.95rem;
+}
+th,
+td {
+  text-align: left;
+  padding: 0.45rem 0.5rem;
+  border-bottom: 1px solid var(--surface-2);
+  vertical-align: middle;
+}
+thead th {
+  border-bottom: 2px solid var(--border);
+}
+
+/* ------------------------------------------------------------------
+   Path Recall
+   ------------------------------------------------------------------ */
+.tile-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  max-width: 30rem;
+  margin: 1rem auto;
+}
+.tile {
+  position: relative;
+  aspect-ratio: 1;
+  min-height: 88px;
+  font-size: 2.6rem;
+  border-width: 3px;
+  transition: transform 120ms ease-out, background-color 120ms ease-out;
+}
+.tile-key {
+  position: absolute;
+  top: 0.3rem;
+  left: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.tile.lit {
+  background: var(--accent);
+  color: var(--accent-text);
+  border-color: var(--text);
+  transform: scale(1.05);
+}
+.tile.lit .tile-key {
+  color: var(--accent-text);
+}
+.tile.chosen {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 3px var(--accent);
+}
+/* While the route is shown the tiles can't be pressed, but must not look faded. */
+.tile[aria-disabled="true"] {
+  opacity: 1;
+  cursor: default;
+}
+:root[data-motion="reduce"] .tile.lit {
+  transform: none;
+}
+
+.beat-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  margin: 1rem 0;
+}
+.beat-light {
+  flex: none;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  border: 3px solid var(--border);
+  background: var(--surface-2);
+  transition: transform 80ms ease-out;
+}
+.beat-light.on {
+  background: var(--accent);
+  border-color: var(--text);
+  transform: scale(1.15);
+}
+:root[data-motion="reduce"] .beat-light.on {
+  transform: none;
+}
+.beat-button {
+  min-height: 88px;
+  min-width: 12rem;
+  font-size: 1.2rem;
+}
+
+/* ------------------------------------------------------------------
+   Tap Tracker
+   ------------------------------------------------------------------ */
+.progress {
+  height: 0.75rem;
+  border-radius: 999px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 1s linear;
+}
+.tap-targets {
+  display: flex;
+  gap: 1.5rem; /* space between targets so a wobble doesn't hit the wrong one */
+  margin: 1.25rem 0;
+}
+.tap-target {
+  flex: 1;
+  height: clamp(160px, 38vh, 320px);
+  border-radius: 28px;
+  border: 3px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 2rem;
+  font-weight: 700;
+  touch-action: none; /* the test area must not scroll or zoom */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+.tap-target.hit {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+.chart {
+  margin: 1rem 0;
+}
+.chart svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.chart-grid {
+  stroke: var(--surface-2);
+  stroke-width: 1;
+}
+.chart-tick {
+  fill: var(--muted);
+  font-size: 14px;
+}
+.chart-marker {
+  stroke: var(--surface);
+  stroke-width: 2;
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+}
+.legend-item {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* ------------------------------------------------------------------
+   Voice Meter
+   ------------------------------------------------------------------ */
+.meter-wrap {
+  margin: 1rem 0;
+}
+.meter {
+  position: relative;
+  height: 4.5rem;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  overflow: hidden;
+}
+.meter-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--muted);
+  transition: width 50ms linear;
+}
+.meter.zone-target .meter-fill {
+  background: var(--good);
+}
+.meter.zone-over .meter-fill {
+  background: var(--warn);
+}
+.meter-band {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-left: 3px dashed var(--text);
+  border-right: 3px dashed var(--text);
+  z-index: 1;
+}
+.meter-band span {
+  position: absolute;
+  top: 0.15rem;
+  left: 0.3rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: var(--surface);
+  padding: 0 0.3rem;
+  border-radius: 4px;
+}
+.zone-label {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-top: 0.5rem;
+}
+.zone-label.zone-target {
+  color: var(--good);
+}
+.zone-label.zone-over {
+  color: var(--warn);
+}
+.exercise-grid {
+  display: grid;
+  gap: 0;
+}
+.read-sentence {
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------------
+   ON/OFF Diary: each state has a colour AND a pattern
+   ------------------------------------------------------------------ */
+.state-on {
+  background: var(--state-on);
+}
+.state-off {
+  background: repeating-linear-gradient(45deg, var(--state-off) 0 6px, var(--state-off-2) 6px 10px);
+}
+.state-dyskinesia {
+  background:
+    radial-gradient(circle, var(--state-dot) 2px, transparent 2.6px) 0 0 / 9px 9px,
+    var(--state-dysk);
+}
+.state-asleep {
+  background: repeating-linear-gradient(0deg, var(--state-asleep) 0 5px, var(--state-asleep-2) 5px 8px);
+}
+.swatch,
+.timeline-bar,
+.timeline-seg {
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+.swatch {
+  display: inline-block;
+  width: 1.6rem;
+  height: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  vertical-align: middle;
+  flex: none;
+}
+
+.timeline {
+  margin: 1rem 0 0.5rem;
+}
+.timeline-bar {
+  position: relative;
+  height: 3rem;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+.timeline-seg {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+.timeline-tick {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--border);
+}
+.timeline-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.timeline.compact {
+  margin: 0;
+  min-width: 8rem;
+}
+.timeline.compact .timeline-bar {
+  height: 1.3rem;
+  border-width: 1px;
+}
+
+.quick-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+.quick-btn {
+  min-height: 88px;
+  flex-direction: column;
+  font-size: 1.05rem;
+}
+.quick-btn .swatch {
+  width: 2.2rem;
+  height: 1.2rem;
+}
+
+.entry-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0 0;
+}
+.entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--surface-2);
+}
+
+.summary-meta {
+  color: var(--muted);
+}
+.summary-section {
+  margin: 1.25rem 0;
+}
+.big-stats dd {
+  font-size: 1.8rem;
+}
+.summary-table .timeline-col {
+  width: 40%;
+}
+.compact-list {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+/* On a phone the timeline column doesn't fit in the table, so the summary
+   shows the day timelines as their own full-width list instead. */
+.mobile-timelines {
+  display: none;
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0;
+}
+.mobile-timelines li {
+  margin-bottom: 0.5rem;
+}
+@media screen and (max-width: 599px) {
+  .summary-table .timeline-col {
+    display: none;
+  }
+  .mobile-timelines {
+    display: block;
+  }
+}
+.summary-method {
+  font-size: 0.85rem;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  padding-top: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+/* ------------------------------------------------------------------
+   Print: the neurologist summary on one A4/Letter page, black on white,
+   whatever theme or text size is set on screen.
+   ------------------------------------------------------------------ */
+@media print {
+  @page {
+    margin: 12mm;
+  }
+  :root,
+  :root[data-theme],
+  :root:not([data-theme="light"]) {
+    color-scheme: light;
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --surface-2: #e5e5e5;
+    --text: #000000;
+    --muted: #333333;
+    --border: #555555;
+    --state-on: #1f8f5f;
+    --state-off: #d9531e;
+    --state-off-2: #f6c3ab;
+    --state-dysk: #6250d6;
+    --state-dot: #ffffff;
+    --state-asleep: #8a8f98;
+    --state-asleep-2: #d3d6db;
+    font-size: 10pt !important;
+  }
+  body {
+    background: #fff;
+    color: #000;
+  }
+  .no-print,
+  .top-bar,
+  .site-footer,
+  .skip-link,
+  .settings-panel {
+    display: none !important;
+  }
+  .print-only {
+    display: block;
+  }
+  main {
+    max-width: none;
+    padding: 0;
+  }
+  h1 {
+    font-size: 16pt;
+    margin: 0 0 4pt;
+  }
+  h2 {
+    font-size: 11.5pt;
+    margin: 0 0 3pt;
+  }
+  h3 {
+    font-size: 10pt;
+    margin: 4pt 0 2pt;
+  }
+  .summary-section {
+    margin: 8pt 0;
+    break-inside: avoid;
+  }
+  .stats div {
+    background: none;
+    border: 1px solid #999;
+    padding: 3pt 6pt;
+  }
+  .big-stats dd {
+    font-size: 14pt;
+  }
+  table {
+    font-size: 9pt;
+  }
+  th,
+  td {
+    padding: 2pt 4pt;
+    border-bottom: 1px solid #bbb;
+  }
+  .table-wrap {
+    overflow: visible;
+  }
+  .timeline.compact .timeline-bar {
+    height: 9pt;
+  }
+  .med-list {
+    columns: 2;
+    column-gap: 16pt;
+  }
+  .questions-print {
+    white-space: pre-wrap;
+    min-height: 5em;
+    border-bottom: 1px solid #999;
+  }
+  a {
+    color: #000;
+    text-decoration: none;
+  }
+}

@@ -1,0 +1,8 @@
+.env
+data/
+.venv/
+**/node_modules/
+web/dist/
+games/
+evals/results/
+.git/
